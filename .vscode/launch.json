@@ -1,0 +1,37 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(gdb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/main",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": false,
+        },
+        {
+            "name": "Debug C Program",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/main",   // Path to the compiled executable
+            "args": [],                             // Arguments to pass to the program
+            "stopAtEntry": false,                   // Set to true to stop at main()
+            "cwd": "${workspaceFolder}",            // Current working directory
+            "environment": [],
+            "externalConsole": false,                // If true, opens an external console
+            "MIMode": "gdb",                        // Debugger type, could be "gdb" or "lldb"
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build",               // Task to run before launching the debugger
+            "miDebuggerPath": "/usr/bin/gdb",       // Path to the debugger
+        },
+    ],
+}
