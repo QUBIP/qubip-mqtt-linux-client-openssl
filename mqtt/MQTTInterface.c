@@ -45,6 +45,8 @@ int mqtt_network_connect(Network *n, char *ip, char *port)
 	OpenSSL_add_all_algorithms();
 	SSL_load_error_strings();
 
+	fprintf(stdout, "%s\n", SSLeay_version(OPENSSL_VERSION));
+
 	// Inizializza bio_err
 	bio_err = BIO_new_fp(stderr, BIO_NOCLOSE);
 
