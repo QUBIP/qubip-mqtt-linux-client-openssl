@@ -10,15 +10,7 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <openssl/bio.h>
-
-// Specifica il percorso al certificato CA (adatta in base alla tua situazione)
-// #define CA_CERT_FILE "./ca.crt" // Percorso relativo
-// #define CA_CERT_FILE "/etc/ssl/certs/ca-certificates.crt" // Percorso assoluto
-// #define CA_CERT_FILE getenv("CA_CERT_PATH") // Variabile d'ambiente
-
-#define CA_CERT_FILE "cert/ca.crt"		   // Percorso al certificato CA del server
-#define CLIENT_CERT_FILE "cert/client.crt" // Percorso al certificato del client
-#define CLIENT_KEY_FILE "cert/client.key"  // Percorso alla chiave privata del client
+#include "../config.h"
 
 int sockfd, ret;
 struct sockaddr_in server_addr; // Nome variabile più descrittivo

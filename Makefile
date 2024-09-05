@@ -1,6 +1,9 @@
 # Target executable
 TARGET := main
 
+# Build directory
+BUILD_DIR := build
+
 # Compiler and flags
 CC := gcc
 CFLAGS := -Wall -Wextra -pedantic -g -pthread
@@ -18,8 +21,8 @@ LIBS := -lstdc++ -Lopenssl-3.2.2 -lssl -lcrypto
 #SRCS := main.c modbus_task.c mqtt_task.c nanoMODBUS/nanomodbus.c utilis.c mqtt/MQTTInterface.c mqtt/MQTTClient.c
 SRCS := $(wildcard *.c nanoMODBUS/*.c mqtt/*.c mqtt/MQTTPacket/*.c)
 
-# Object files
-OBJS := $(SRCS:.c=.o)
+# Object files (within the build directory)
+OBJS := $(patsubst %.c,$(BUILD_DIR)/%.o,$(SRCS))
 
 # Default target
 all: $(TARGET)
@@ -28,8 +31,9 @@ all: $(TARGET)
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
-# Compile source files into object files
-%.o: %.c
+# Compile source files into object files (within the build directory)
+$(BUILD_DIR)/%.o: %.c
+	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Clean up

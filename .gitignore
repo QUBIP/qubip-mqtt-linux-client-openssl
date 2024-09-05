@@ -1,0 +1,298 @@
+# Compiled object files
+*.o
+*.obj
+
+# Executable files
+*.exe
+*.out
+*.bin
+
+# Dependency directories (if using build systems like CMake)
+build/
+cmake-build-*/
+
+# IDE-specific files and directories
+.vscode/
+*.csproj
+*.sln
+*.suo
+*.user
+
+# Backup files created by some editors
+*~
+
+# Log files
+*.log
+
+# Core dumps
+core
+
+# Object files from compiling assembly code
+*.asm.o
+
+# Precompiled headers
+*.gch
+
+# Ignore editor artefacts
+/openssl-3.2.2/.dir-locals.el
+
+# Top level excludes
+/openssl-3.2.2/Makefile.in
+/openssl-3.2.2/Makefile
+/openssl-3.2.2/MINFO
+/openssl-3.2.2/TABLE
+/openssl-3.2.2/rehash.time
+/openssl-3.2.2/inc.*
+/openssl-3.2.2/makefile.*
+/openssl-3.2.2/out.*
+/openssl-3.2.2/tmp.*
+/openssl-3.2.2/configdata.pm
+/openssl-3.2.2/builddata.pm
+/openssl-3.2.2/installdata.pm
+
+# Exporters
+/openssl-3.2.2/*.pc
+/openssl-3.2.2/OpenSSLConfig*.cmake
+/openssl-3.2.2/exporters/*.pc
+/openssl-3.2.2/exporters/OpenSSLConfig*.cmake
+
+# Links under apps
+/openssl-3.2.2/apps/CA.pl
+/openssl-3.2.2/apps/tsget
+/openssl-3.2.2/apps/tsget.pl
+/openssl-3.2.2/apps/md4.c
+
+# Auto generated headers
+/openssl-3.2.2/crypto/buildinf.h
+/openssl-3.2.2/include/crypto/*_conf.h
+/openssl-3.2.2/include/openssl/asn1.h
+/openssl-3.2.2/include/openssl/asn1t.h
+/openssl-3.2.2/include/openssl/bio.h
+/openssl-3.2.2/include/openssl/cmp.h
+/openssl-3.2.2/include/openssl/cms.h
+/openssl-3.2.2/include/openssl/comp.h
+/openssl-3.2.2/include/openssl/conf.h
+/openssl-3.2.2/include/openssl/configuration.h
+/openssl-3.2.2/include/openssl/crmf.h
+/openssl-3.2.2/include/openssl/crypto.h
+/openssl-3.2.2/include/openssl/ct.h
+/openssl-3.2.2/include/openssl/err.h
+/openssl-3.2.2/include/openssl/ess.h
+/openssl-3.2.2/include/openssl/fipskey.h
+/openssl-3.2.2/include/openssl/lhash.h
+/openssl-3.2.2/include/openssl/ocsp.h
+/openssl-3.2.2/include/openssl/opensslv.h
+/openssl-3.2.2/include/openssl/pkcs12.h
+/openssl-3.2.2/include/openssl/pkcs7.h
+/openssl-3.2.2/include/openssl/safestack.h
+/openssl-3.2.2/include/openssl/srp.h
+/openssl-3.2.2/include/openssl/ssl.h
+/openssl-3.2.2/include/openssl/ui.h
+/openssl-3.2.2/include/openssl/x509.h
+/openssl-3.2.2/include/openssl/x509v3.h
+/openssl-3.2.2/include/openssl/x509_acert.h
+/openssl-3.2.2/include/openssl/x509_vfy.h
+/openssl-3.2.2/include/openssl/core_names.h
+/openssl-3.2.2/include/internal/param_names.h
+
+# Auto generated parameter name files
+/openssl-3.2.2/crypto/params_idx.c
+
+# Auto generated doc files
+/openssl-3.2.2doc/man1/openssl-*.pod
+
+# Auto generated der files
+/openssl-3.2.2providers/common/der/der_digests_gen.c
+/openssl-3.2.2providers/common/der/der_dsa_gen.c
+/openssl-3.2.2providers/common/der/der_ec_gen.c
+/openssl-3.2.2providers/common/der/der_ecx_gen.c
+/openssl-3.2.2providers/common/der/der_rsa_gen.c
+/openssl-3.2.2providers/common/der/der_wrap_gen.c
+/openssl-3.2.2providers/common/der/der_sm2_gen.c
+/openssl-3.2.2providers/common/include/prov/der_dsa.h
+/openssl-3.2.2providers/common/include/prov/der_ec.h
+/openssl-3.2.2providers/common/include/prov/der_ecx.h
+/openssl-3.2.2providers/common/include/prov/der_rsa.h
+/openssl-3.2.2providers/common/include/prov/der_digests.h
+/openssl-3.2.2providers/common/include/prov/der_wrap.h
+/openssl-3.2.2providers/common/include/prov/der_sm2.h
+
+# error code files
+/openssl-3.2.2/crypto/err/openssl.txt.old
+/openssl-3.2.2/engines/e_afalg.txt.old
+/openssl-3.2.2/engines/e_capi.txt.old
+/openssl-3.2.2/engines/e_dasync.txt.old
+/openssl-3.2.2/engines/e_ossltest.txt.old
+
+# Executables
+/openssl-3.2.2/apps/openssl
+/openssl-3.2.2/test/sha256t
+/openssl-3.2.2/test/sha512t
+/openssl-3.2.2/test/gost2814789t
+/openssl-3.2.2/test/ssltest_old
+/openssl-3.2.2/test/*test
+/openssl-3.2.2/test/fips_aesavs
+/openssl-3.2.2/test/fips_desmovs
+/openssl-3.2.2/test/fips_dhvs
+/openssl-3.2.2/test/fips_drbgvs
+/openssl-3.2.2/test/fips_dssvs
+/openssl-3.2.2/test/fips_ecdhvs
+/openssl-3.2.2/test/fips_ecdsavs
+/openssl-3.2.2/test/fips_rngvs
+/openssl-3.2.2/test/fips_test_suite
+/openssl-3.2.2/test/ssltest_old
+/openssl-3.2.2/test/x509aux
+/openssl-3.2.2/test/v3ext
+/openssl-3.2.2/test/versions
+/openssl-3.2.2/test/ossl_shim/ossl_shim
+/openssl-3.2.2/test/rsa_complex
+/openssl-3.2.2/test/confdump
+/openssl-3.2.2/test/bio_prefix_text
+/openssl-3.2.2/test/evp_extra_test2
+/openssl-3.2.2/test/evp_pkey_ctx_new_from_name
+/openssl-3.2.2/test/threadstest_fips
+/openssl-3.2.2/test/timing_load_creds
+
+# Certain files that get created by tests on the fly
+/openssl-3.2.2/test-runs
+/openssl-3.2.2/test/buildtest_*
+/openssl-3.2.2/test/provider_internal_test.cnf
+/openssl-3.2.2/test/fipsmodule.cnf
+/openssl-3.2.2/providers/fipsmodule.cnf
+
+# Fuzz stuff.
+# Anything without an extension is an executable on Unix, so we keep files
+# with extensions.  And we keep the corpora subddir versioned as well.
+# Anything more generic with extensions that should be ignored will be taken
+# care of by general ignores for those extensions (*.o, *.obj, *.exe, ...)
+/openssl-3.2.2/fuzz/*
+/openssl-3.2.2!/fuzz/README*
+/openssl-3.2.2!/fuzz/corpora
+/openssl-3.2.2!/fuzz/*.*
+
+# Misc auto generated files
+/openssl-3.2.2/doc/man7/openssl_user_macros.pod
+/openssl-3.2.2/tools/c_rehash
+/openssl-3.2.2/tools/c_rehash.pl
+/openssl-3.2.2/util/shlib_wrap.sh
+/openssl-3.2.2/util/wrap.pl
+/openssl-3.2.2/util/quicserver
+/openssl-3.2.2/tags
+/openssl-3.2.2/TAGS
+/openssl-3.2.2*.map
+/openssl-3.2.2*.ld
+/openssl-3.2.2/apps/progs.c
+/openssl-3.2.2/apps/progs.h
+
+# macOS
+/openssl-3.2.2.DS_Store
+
+# Windows (legacy)
+/openssl-3.2.2/tmp32
+/openssl-3.2.2/tmp32.dbg
+/openssl-3.2.2/tmp32dll
+/openssl-3.2.2/tmp32dll.dbg
+/openssl-3.2.2/out32
+/openssl-3.2.2/out32.dbg
+/openssl-3.2.2/out32dll
+/openssl-3.2.2/out32dll.dbg
+/openssl-3.2.2/inc32
+/openssl-3.2.2/MINFO
+/openssl-3.2.2/ms/bcb.mak
+/openssl-3.2.2/ms/libeay32.def
+/openssl-3.2.2/ms/nt.mak
+/openssl-3.2.2/ms/ntdll.mak
+/openssl-3.2.2/ms/ssleay32.def
+/openssl-3.2.2/ms/version32.rc
+
+# Files created on other branches that are not held in git, and are not
+# needed on this branch
+/openssl-3.2.2/include/openssl/asn1_mac.h
+/openssl-3.2.2/include/openssl/des_old.h
+/openssl-3.2.2/include/openssl/fips.h
+/openssl-3.2.2/include/openssl/fips_rand.h
+/openssl-3.2.2/include/openssl/krb5_asn.h
+/openssl-3.2.2/include/openssl/kssl.h
+/openssl-3.2.2/include/openssl/pq_compat.h
+/openssl-3.2.2/include/openssl/ssl23.h
+/openssl-3.2.2/include/openssl/tmdiff.h
+/openssl-3.2.2/include/openssl/ui_compat.h
+/openssl-3.2.2/test/fips_aesavs.c
+/openssl-3.2.2/test/fips_desmovs.c
+/openssl-3.2.2/test/fips_dsatest.c
+/openssl-3.2.2/test/fips_dssvs.c
+/openssl-3.2.2/test/fips_hmactest.c
+/openssl-3.2.2/test/fips_randtest.c
+/openssl-3.2.2/test/fips_rngvs.c
+/openssl-3.2.2/test/fips_rsagtest.c
+/openssl-3.2.2/test/fips_rsastest.c
+/openssl-3.2.2/test/fips_rsavtest.c
+/openssl-3.2.2/test/fips_shatest.c
+/openssl-3.2.2/test/fips_test_suite.c
+/openssl-3.2.2/test/shatest.c
+
+# Generated docs directories
+/openssl-3.2.2/doc/html
+/openssl-3.2.2/doc/man
+
+##### Generic patterns
+# Auto generated assembly language source files
+/openssl-3.2.2*.s
+/openssl-3.2.2!/crypto/*/asm/*.s
+/openssl-3.2.2/crypto/arm*.S
+/openssl-3.2.2/crypto/*/*.S
+/openssl-3.2.2*.asm
+/openssl-3.2.2!/crypto/*/asm/*.asm
+
+# Object files
+/openssl-3.2.2*.o
+/openssl-3.2.2*.obj
+
+# editor artefacts
+/openssl-3.2.2*.swp
+/openssl-3.2.2.#*
+/openssl-3.2.2\#*#
+/openssl-3.2.2*~
+
+# Certificate symbolic links
+/openssl-3.2.2*.0
+
+# All kinds of libraries and executables
+/openssl-3.2.2*.a
+/openssl-3.2.2*.so
+/openssl-3.2.2*.so.*
+/openssl-3.2.2*.dylib
+/openssl-3.2.2*.dylib.*
+/openssl-3.2.2*.dll
+/openssl-3.2.2*.dll.*
+/openssl-3.2.2*.exe
+/openssl-3.2.2*.pyc
+/openssl-3.2.2*.exp
+/openssl-3.2.2*.lib
+/openssl-3.2.2*.pdb
+/openssl-3.2.2*.tds
+/openssl-3.2.2*.ilk
+/openssl-3.2.2*.def
+/openssl-3.2.2*.rc
+/openssl-3.2.2*.res
+
+# Misc generated stuff
+/openssl-3.2.2Makefile.save
+/openssl-3.2.2/crypto/**/lib
+/openssl-3.2.2/engines/**/lib
+/openssl-3.2.2/ssl/**/lib
+/openssl-3.2.2*.bak
+/openssl-3.2.2cscope.*
+/openssl-3.2.2*.d
+/openssl-3.2.2!.ctags.d
+/openssl-3.2.2*.d.tmp
+/openssl-3.2.2pod2htmd.tmp
+/openssl-3.2.2MAKE0[0-9][0-9][0-9].@@@
+
+# Windows manifest files
+/openssl-3.2.2*.manifest
+/openssl-3.2.2doc-nits
+
+# LSP (Language Server Protocol) support
+/openssl-3.2.2.cache/
+/openssl-3.2.2compile_commands.json

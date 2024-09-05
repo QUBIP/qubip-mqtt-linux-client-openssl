@@ -1,7 +1,4 @@
 [submodule "nanoMODBUS"]
 	path = nanoMODBUS
 	url = https://github.com/debevv/nanoMODBUS
-[submodule "openssl_3.2"]
-	path = openssl_3.2
-	url = https://github.com/openssl/openssl
-	branch = openssl-3.2
+
