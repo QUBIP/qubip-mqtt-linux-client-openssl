@@ -83,10 +83,10 @@ void *modbus_task(void *arg)
     {
         // Read holding register
         uint16_t r_regs[1];
-        err = nmbs_read_holding_registers(&nmbs, MODBUS_PLC_REGISTER, 1, r_regs);
+        err = nmbs_read_holding_registers(&nmbs, config->plc_register, 1, r_regs);
         if (err != NMBS_ERROR_NONE)
         {
-            fprintf(stderr, "modbus_task: Error reading 2 holding registers at address %d - %s\n", MODBUS_PLC_REGISTER, nmbs_strerror(err));
+            fprintf(stderr, "modbus_task: Error reading holding register at address %d - %s\n", config->plc_register, nmbs_strerror(err));
             if (!nmbs_error_is_exception(err))
             {
                 disconnect(conn);
@@ -94,7 +94,7 @@ void *modbus_task(void *arg)
             }
         }
 
-        printf("modbus_task: Register at address %d: %d\n", MODBUS_PLC_REGISTER, r_regs[0]);
+        printf("modbus_task: Register at address %d: %d\n", config->plc_register, r_regs[0]);
 
         // Send register to mqtt task
         pthread_mutex_lock(&mutex);
@@ -108,10 +108,10 @@ void *modbus_task(void *arg)
 
         // Write data in holding register
         uint16_t w_regs[1] = {r_regs[0]};
-        err = nmbs_write_multiple_registers(&nmbs, MODBUS_PLC_REGISTER, 1, w_regs);
+        err = nmbs_write_multiple_registers(&nmbs, config->plc_register, 1, w_regs);
         if (err != NMBS_ERROR_NONE)
         {
-            fprintf(stderr, "modbus_task: Error writing register at address %d - %s\n", MODBUS_PLC_REGISTER, nmbs_strerror(err));
+            fprintf(stderr, "modbus_task: Error writing register at address %d - %s\n", config->plc_register, nmbs_strerror(err));
             if (!nmbs_error_is_exception(err))
             {
                 disconnect(conn);

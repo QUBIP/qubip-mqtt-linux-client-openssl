@@ -18,7 +18,10 @@
         "pthread.h": "c",
         "nanomodbus.h": "c",
         "initializer_list": "c",
-        "utility": "c"
+        "utility": "c",
+        "unistd.h": "c",
+        "getopt.h": "c",
+        "config.h": "c"
     },
     "cmake.sourceDirectory": "/home/federico/git/qubip-mqtt-linux-client-openssl/nanoMODBUS"
 }

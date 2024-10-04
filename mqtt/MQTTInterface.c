@@ -13,11 +13,12 @@
 #include "../config.h"
 
 int sockfd, ret;
-struct sockaddr_in server_addr; // Nome variabile più descrittivo
+struct sockaddr_in server_addr;
 struct hostent *server;
 SSL_CTX *ctx;
 SSL *ssl;
 BIO *bio_err;
+
 
 void mqtt_network_init(Network *n)
 {
@@ -27,126 +28,126 @@ void mqtt_network_init(Network *n)
 	n->disconnect = mqtt_network_disconnect; // disconnection function
 }
 
-int mqtt_network_connect(Network *n, char *ip, char *port)
+int mqtt_network_connect(Network *n, char *ip, char *port, char* ca_cert_file, char* client_cert_file, char* client_key_file)
 {
 	mqtt_network_init(n);
 	// mqtt_network_clear();
 
-	// Inizializza OpenSSL
+	// Initialize OpenSSL
 	SSL_library_init();
 	OpenSSL_add_all_algorithms();
 	SSL_load_error_strings();
 
 	fprintf(stdout, "%s\n", SSLeay_version(OPENSSL_VERSION));
 
-	// Inizializza bio_err
+	// Initialize bio_err
 	bio_err = BIO_new_fp(stderr, BIO_NOCLOSE);
 
-	// Crea il contesto SSL
+	// Create SSL context
 	ctx = SSL_CTX_new(TLS_client_method());
 	if (!ctx)
 	{
-		fprintf(stderr, "Errore nella creazione del contesto SSL\n");
+		fprintf(stderr, "Error creating SSL context\n");
 		ERR_print_errors_fp(stderr);
 		return 1;
 	}
 
-	// Carica il certificato CA del server
-	if (SSL_CTX_load_verify_locations(ctx, CA_CERT_FILE, NULL) != 1)
+	// Load the server's CA certificate
+	if (SSL_CTX_load_verify_locations(ctx, ca_cert_file, NULL) != 1)
 	{
-		fprintf(stderr, "Errore nel caricamento del certificato CA\n");
+		fprintf(stderr, "Error loading CA certificate\n");
 		ERR_print_errors_fp(stderr);
 		return 1;
 	}
 
-	// Carica il certificato e la chiave privata del client
-	if (SSL_CTX_use_certificate_file(ctx, CLIENT_CERT_FILE, SSL_FILETYPE_PEM) != 1)
+	// Load the client's certificate and private key
+	if (SSL_CTX_use_certificate_file(ctx, client_cert_file, SSL_FILETYPE_PEM) != 1)
 	{
-		fprintf(stderr, "Errore nel caricamento del certificato client\n");
+		fprintf(stderr, "Error loading client certificate\n");
 		ERR_print_errors_fp(stderr);
 		return 1;
 	}
 
-	if (SSL_CTX_use_PrivateKey_file(ctx, CLIENT_KEY_FILE, SSL_FILETYPE_PEM) != 1)
+	if (SSL_CTX_use_PrivateKey_file(ctx, client_key_file, SSL_FILETYPE_PEM) != 1)
 	{
-		fprintf(stderr, "Errore nel caricamento della chiave privata client\n");
+		fprintf(stderr, "Error loading client's private key\n");
 		ERR_print_errors_fp(stderr);
 		return 1;
 	}
 
-	// Verifica che la chiave privata corrisponda al certificato
+	// Verify that the private key matches the certificate
 	if (SSL_CTX_check_private_key(ctx) != 1)
 	{
-		fprintf(stderr, "Errore: la chiave privata non corrisponde al certificato\n");
+		fprintf(stderr, "Error: private key does not match the certificate\n");
 		ERR_print_errors_fp(stderr);
 		return 1;
 	}
 
-	// Carica i certificati di root CA di sistema (opzionale ma consigliato)
+	// Load system root CA certificates (optional but recommended)
 	if (SSL_CTX_set_default_verify_paths(ctx) != 1)
 	{
-		fprintf(stderr, "Avviso: errore nel caricamento dei certificati CA di sistema (potrebbe non essere un problema se stai utilizzando un certificato CA personalizzato)\n");
+		fprintf(stderr, "Warning: error loading system CA certificates (this may not be an issue if you're using a custom CA certificate)\n");
 		ERR_print_errors_fp(stderr);
-		// Non terminare il programma, poiché potresti comunque essere in grado di verificare il certificato utilizzando il certificato CA specifico
+		// Do not terminate the program, as you may still be able to verify the certificate using the specific CA certificate
 	}
 
-	// Crea il socket TCP
+	// Create the TCP socket
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0)
 	{
-		perror("Errore nella creazione del socket");
+		perror("Error creating socket");
 		return 1;
 	}
 
-	// Risolve l'hostname
+	// Resolve the hostname
 	server = gethostbyname(ip);
 	if (server == NULL)
 	{
-		fprintf(stderr, "Errore nella risoluzione dell'host %s\n", ip);
+		fprintf(stderr, "Error resolving host %s\n", ip);
 		return 1;
 	}
 
-	// Imposta l'indirizzo del server
+	// Set the server address
 	memset(&server_addr, 0, sizeof(server_addr));
 	server_addr.sin_family = AF_INET;
 	memcpy(&server_addr.sin_addr.s_addr, server->h_addr, server->h_length);
 	int int_port = atoi(port);
 	server_addr.sin_port = htons(int_port);
 
-	// Connetti al server
+	// Connect to the server
 	if (connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
 	{
-		perror("Errore nella connessione");
+		perror("Error connecting");
 		return 1;
 	}
 
-	// Crea la struttura SSL e associa il socket
+	// Create the SSL structure and associate the socket
 	ssl = SSL_new(ctx);
 	if (!ssl)
 	{
-		fprintf(stderr, "Errore nella creazione della struttura SSL\n");
+		fprintf(stderr, "Error creating SSL structure\n");
 		ERR_print_errors_fp(stderr);
 		return 1;
 	}
 	SSL_set_fd(ssl, sockfd);
 
-	// Abilita i messaggi di debug
+	// Enable debug messages
 	// SSL_set_info_callback(ssl, apps_ssl_info_callback);
 
-	// Effettua l'handshake SSL
+	// Perform the SSL handshake
 	ret = SSL_connect(ssl);
 	if (ret != 1)
 	{
-		fprintf(stderr, "Errore nell'handshake SSL\n");
+		fprintf(stderr, "Error in SSL handshake\n");
 		ERR_print_errors_fp(stderr);
 		return 1;
 	}
 
-	// Verifica il certificato del server
+	// Verify the server's certificate
 	if (SSL_get_verify_result(ssl) != X509_V_OK)
 	{
-		fprintf(stderr, "Errore nella verifica del certificato del server\n");
-		ERR_print_errors_fp(stderr); // Stampa gli errori di OpenSSL per ottenere maggiori dettagli
+		fprintf(stderr, "Error verifying the server's certificate\n");
+		ERR_print_errors_fp(stderr); // Print OpenSSL errors for more details
 		return 1;
 	}
 
@@ -166,19 +167,19 @@ int mqtt_network_read(Network *n, unsigned char *buffer, int len, int timeout_ms
 			int err = SSL_get_error(ssl, read);
 			if (err == SSL_ERROR_WANT_READ || err == SSL_ERROR_WANT_WRITE)
 			{
-				// La lettura è stata bloccata, riprova più tardi
+				// The read was blocked, try again later
 				continue;
 			}
 			else
 			{
-				fprintf(stderr, "Errore nella lettura dei dati dal server: %s\n", ERR_error_string(ERR_get_error(), NULL));
-				return -1; // Indica un errore
+				fprintf(stderr, "Error reading data from the server: %s\n", ERR_error_string(ERR_get_error(), NULL));
+				return -1; // Indicates an error
 			}
 		}
 		total_read += read;
 	}
 
-	return total_read; // Restituisce il numero totale di byte letti
+	return total_read; // Returns the total number of bytes read
 }
 
 int mqtt_network_read_(Network *n, unsigned char *buffer, int len, int timeout_ms)
@@ -192,51 +193,51 @@ int mqtt_network_read_(Network *n, unsigned char *buffer, int len, int timeout_m
 
 	while (total_read < len)
 	{
-		// Imposta il timeout
-		tv.tv_sec = timeout_ms / 1000;			 // Secondi
-		tv.tv_usec = (timeout_ms % 1000) * 1000; // Microsecondi
+		// Set the timeout
+		tv.tv_sec = timeout_ms / 1000;			 // Seconds
+		tv.tv_usec = (timeout_ms % 1000) * 1000; // Microseconds
 
-		// Inizializza il file descriptor set
+		// Initialize the file descriptor set
 		FD_ZERO(&readfds);
 		FD_SET(n->socket, &readfds);
 
-		// Attendi che il socket sia pronto per la lettura o che scada il timeout
+		// Wait for the socket to be ready for reading or for the timeout to expire
 		int rc = select(n->socket + 1, &readfds, NULL, NULL, &tv);
 
 		if (rc < 0)
 		{
-			// Errore in select
+			// Error in select
 			perror("Error in select");
 			return -1;
 		}
 		else if (rc == 0)
 		{
-			// Timeout scaduto
-			return 0; // Indica un timeout
+			// Timeout expired
+			return 0; // Indicates a timeout
 		}
 		else
 		{
-			// Socket pronto per la lettura
-			read = SSL_read(ssl, buffer + total_read, len - total_read); // Assumiamo che n->ssl sia il puntatore all'oggetto SSL
+			// Socket ready for reading
+			read = SSL_read(ssl, buffer + total_read, len - total_read); // Assuming n->ssl is the pointer to the SSL object
 			if (read <= 0)
 			{
 				int err = SSL_get_error(ssl, read);
 				if (err == SSL_ERROR_WANT_READ || err == SSL_ERROR_WANT_WRITE)
 				{
-					// La lettura è stata bloccata, riprova più tardi
+					// The read was blocked, try again later
 					continue;
 				}
 				else
 				{
-					fprintf(stderr, "Errore nella lettura dei dati dal server: %s\n", ERR_error_string(ERR_get_error(), NULL));
-					return -1; // Indica un errore
+					fprintf(stderr, "Error reading data from the server: %s\n", ERR_error_string(ERR_get_error(), NULL));
+					return -1; // Indicates an error
 				}
 			}
 			total_read += read;
 		}
 	}
 
-	return total_read; // Restituisce il numero totale di byte letti
+	return total_read; // Returns the total number of bytes read
 }
 
 int mqtt_network_write(Network *n, unsigned char *buffer, int len, int timeout_ms)
@@ -255,44 +256,45 @@ int mqtt_network_write(Network *n, unsigned char *buffer, int len, int timeout_m
 			int err = SSL_get_error(ssl, written);
 			if (err == SSL_ERROR_WANT_READ || err == SSL_ERROR_WANT_WRITE)
 			{
-				// La scrittura è stata bloccata, riprova più tardi
+				// The write was blocked, try again later
 				continue;
 			}
 			else
 			{
-				fprintf(stderr, "Errore nella scrittura dei dati al server: %s\n", ERR_error_string(ERR_get_error(), NULL));
-				return -1; // Indica un errore
+				fprintf(stderr, "Error writing data to the server: %s\n", ERR_error_string(ERR_get_error(), NULL));
+				return -1; // Indicates an error
 			}
 		}
 		total_written += written;
 	}
 
-	return total_written; // Restituisce il numero totale di byte scritti
+	return total_written; // Returns the total number of bytes written
 }
 
 void mqtt_network_disconnect(Network *n)
 {
 	(void)n;
 
-	// Chiudi la connessione SSL e il socket
+	// Close the SSL connection and the socket
 	SSL_shutdown(ssl);
 	SSL_free(ssl);
 	close(sockfd);
-	// Libera bio_err alla fine del programma
+	// Free bio_err at the end of the program
 	BIO_free(bio_err);
 	SSL_CTX_free(ctx);
 }
 
 void mqtt_network_clear()
 {
-	// Chiudi la connessione SSL e il socket
+	// Close the SSL connection and the socket
 	//	SSL_shutdown(ssl);
 	SSL_free(ssl);
 	close(sockfd);
-	// Libera bio_err alla fine del programma
+	// Free bio_err at the end of the program
 	BIO_free(bio_err);
 	SSL_CTX_free(ctx);
 }
+
 
 // Timer functions
 void TimerInit(Timer *timer)

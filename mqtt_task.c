@@ -20,9 +20,14 @@ static unsigned char rcvBuffer[MQTT_BUFSIZE]; // mqtt receive buffer
 static unsigned char msgBuffer[MQTT_BUFSIZE]; // mqtt message buffer
 
 /**
- * @brief Callback function invoked when an MQTT message arrives.
- * @param argument: None
- * @param msg Pointer to the received message data.
+ * @brief Callback function invoked when an MQTT message is received.
+ * 
+ * This function is called whenever a new MQTT message arrives. It processes
+ * the incoming message data provided in the msg argument.
+ * 
+ * @param[in] msg Pointer to the received message data.
+ * 
+ * @retval None
  */
 void MqttMessageArrived(MessageData *msg)
 {
@@ -37,14 +42,25 @@ void MqttMessageArrived(MessageData *msg)
 }
 
 /**
- * @brief Connects to an MQTT broker and subscribes to a topic.
- * @param argument: None
- * @retval MQTT_SUCCESS on success, or an MQTT error code on failure.
+ * @brief Connects to an MQTT broker and subscribes to a specified topic.
+ * 
+ * This function establishes a connection to the MQTT broker using the provided
+ * configuration and subscribes to a predefined topic.
+ * 
+ * @param[in] config Pointer to the MQTT configuration structure.
+ * 
+ * @retval MQTT_SUCCESS on successful connection and subscription.
+ * @retval MQTT error code on failure.
  */
-int MqttConnectBroker(void)
+int MqttConnectBroker(mqtt_config_t* config)
 {
     // Connect to MQTT broker
-    int ret = mqtt_network_connect(&mqttNet, MQTT_BROKER_IP, MQTT_BROKER_PORT);
+    int ret = mqtt_network_connect(&mqttNet, 
+                                    config->broker_ip, 
+                                    config->broker_port,
+                                    config->ca_cert_file,
+                                    config->client_cert_file,
+                                    config->client_key_file);
 
     if (ret != MQTT_SUCCESS)
     {
@@ -78,7 +94,7 @@ int MqttConnectBroker(void)
     }
 
     // Subscribe to the desired topic
-    ret = MQTTSubscribe(&mqttClient, MQTT_TOPIC, QOS0, MqttMessageArrived);
+    ret = MQTTSubscribe(&mqttClient, config->topic, QOS0, MqttMessageArrived);
     if (ret != MQTT_SUCCESS)
     {
         // Handle subscription failure
@@ -92,7 +108,17 @@ int MqttConnectBroker(void)
     return MQTT_SUCCESS;
 }
 
-// Function implementing the MqttClientSubTask thread.
+/**
+ * @brief Function implementing the MqttClientSubTask thread.
+ * 
+ * This function runs as a separate thread and handles the MQTT client's
+ * subscription-related tasks, including message handling and topic management.
+ * It continuously listens for incoming MQTT messages on subscribed topics.
+ * 
+ * @param[in] arg Pointer to arguments required by the thread (if any).
+ * 
+ * @retval Pointer to the result of the thread execution or NULL.
+ */
 void *mqtt_sub_task(void *arg)
 {
     mqtt_config_t *config = (mqtt_config_t *)arg;
@@ -122,7 +148,17 @@ void *mqtt_sub_task(void *arg)
     return NULL;
 }
 
-// Function implementing the MqttClientPubTask thread
+/**
+ * @brief Function implementing the MqttClientPubTask thread.
+ * 
+ * This function runs as a separate thread and handles the MQTT client's
+ * publishing tasks. It is responsible for sending messages to specified 
+ * MQTT topics based on the application's needs.
+ * 
+ * @param[in] arg Pointer to arguments required by the thread (if any).
+ * 
+ * @retval Pointer to the result of the thread execution or NULL.
+ */
 void *mqtt_pub_task(void *arg)
 {
     mqtt_config_t *config = (mqtt_config_t *)arg;
@@ -146,7 +182,7 @@ void *mqtt_pub_task(void *arg)
         int nAttemps = 0;
         do
         {
-            ret = MqttConnectBroker();
+            ret = MqttConnectBroker(config);
 
             if (ret != MQTT_SUCCESS)
             {
@@ -178,16 +214,17 @@ void *mqtt_pub_task(void *arg)
             // Composing the message to be sent
             snprintf(str, sizeof(str),
                      "{\n"
-                     "  \"device\": \"LINUX\",\n"
+                     "  \"device\": \"%s\",\n"
                      "  \"data\": %lu\n"
                      "}",
+                     config->device_name,
                      ulNotifiedValue);
-            // snprintf(str, sizeof(str), "MQTT message from STM32: %lu", ulNotifiedValue);
+            
             message.payload = (void *)str;
             message.payloadlen = strlen(str);
 
             // Send the message at topic
-            if (MQTTPublish(&mqttClient, MQTT_TOPIC, &message) != MQTT_SUCCESS)
+            if (MQTTPublish(&mqttClient, config->topic, &message) != MQTT_SUCCESS)
             {
                 MQTTCloseSession(&mqttClient);
                 mqtt_network_disconnect(&mqttNet);

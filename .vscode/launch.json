@@ -16,13 +16,34 @@
             "name": "Debug C Program",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/main",   // Path to the compiled executable
-            "args": [],                             // Arguments to pass to the program
-            "stopAtEntry": false,                   // Set to true to stop at main()
-            "cwd": "${workspaceFolder}",            // Current working directory
+            "program": "${workspaceFolder}/main", // Path to the compiled executable
+            "args": [
+                "--ca-cert",
+                "cert/ca.crt",
+                "--client-cert",
+                "cert/client.crt",
+                "--client-key",
+                "cert/client.key",
+                "--modbus-ip",
+                "192.168.168.134",
+                "--modbus-port",
+                "5002",
+                "--modbus-register",
+                "10",
+                "--mqtt-broker",
+                "192.168.101.63",
+                "--mqtt-port",
+                "1883",
+                "--mqtt-device-name",
+                "LINUX-DEBUG",
+                "--mqtt-topic",
+                "2023/test"
+            ],
+            "stopAtEntry": false, // Set to true to stop at main()
+            "cwd": "${workspaceFolder}", // Current working directory
             "environment": [],
-            "externalConsole": false,                // If true, opens an external console
-            "MIMode": "gdb",                        // Debugger type, could be "gdb" or "lldb"
+            "externalConsole": false, // If true, opens an external console
+            "MIMode": "gdb", // Debugger type, could be "gdb" or "lldb"
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -30,8 +51,8 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "build",               // Task to run before launching the debugger
-            "miDebuggerPath": "/usr/bin/gdb",       // Path to the debugger
+            "preLaunchTask": "build", // Task to run before launching the debugger
+            "miDebuggerPath": "/usr/bin/gdb", // Path to the debugger
         },
     ],
 }
